@@ -1,0 +1,180 @@
+{
+  "main": {
+    "id": "b4eed95638395975",
+    "type": "split",
+    "children": [
+      {
+        "id": "a85a42270bd3d0a9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "649fc34d5ad86bd6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Event Messaging System (EMS).md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "343a27d3b6be6eee",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "af24c8fc749dc9ac",
+    "type": "split",
+    "children": [
+      {
+        "id": "24a660b9e0bf7d3e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2f48f1aa50bda98c",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "26e9c55d7d586adc",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "ee8e91a3e271cbcd",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "d4e3e2e8a81474fe",
+    "type": "split",
+    "children": [
+      {
+        "id": "d19c45415a63a967",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1a9cffecfb617aa5",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "e57cd260ec1e145a",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "98f629437fa98c0d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "2ebf3a67d989eaf5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "343a27d3b6be6eee",
+  "lastOpenFiles": [
+    "Event Sender.md",
+    "Event Messaging System (EMS).md",
+    "Router.md",
+    "Physics Object Manager (POM).md",
+    "Physics Subsystem.md",
+    "JSON Manager.md",
+    "Instance.md",
+    "Element.md",
+    "Component.md",
+    "Uuid.md",
+    "PO Settings.md",
+    "Physics Objects.md",
+    "Scene Manager.md",
+    "IOInterceptor.md",
+    "docs/readme.md",
+    "Post-Processing.md",
+    "Reflection.md",
+    "Gravity.md",
+    "Collider.md",
+    "Welcome.md",
+    "New Features.canvas",
+    "fall.md",
+    "docs",
+    "burge"
+  ]
+}
