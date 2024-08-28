@@ -23,12 +23,28 @@
             "id": "343a27d3b6be6eee",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "Physics Object Manager (POM).md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "cc7adb1f23ff2289",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "JSON Manager.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -94,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Event Messaging System (EMS).md",
+                "file": "JSON Manager.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Event Messaging System (EMS).md",
+                "file": "JSON Manager.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -134,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Event Messaging System (EMS).md"
+                "file": "JSON Manager.md"
               }
             }
           }
@@ -154,20 +170,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "343a27d3b6be6eee",
+  "active": "cc7adb1f23ff2289",
   "lastOpenFiles": [
+    "Component.md",
+    "Untitled.md",
+    "Physics Object Manager (POM).md",
+    "PO Settings.md",
+    "Physics Objects.md",
+    "Physics Subsystem.md",
+    "Router.md",
     "Event Sender.md",
     "Event Messaging System (EMS).md",
-    "Router.md",
-    "Physics Object Manager (POM).md",
-    "Physics Subsystem.md",
     "JSON Manager.md",
     "Instance.md",
     "Element.md",
-    "Component.md",
     "Uuid.md",
-    "PO Settings.md",
-    "Physics Objects.md",
     "Scene Manager.md",
     "IOInterceptor.md",
     "docs/readme.md",
