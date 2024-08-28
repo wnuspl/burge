@@ -59,7 +59,7 @@ pub struct RoutedEvent<T:Clone>(pub Option<Uuid>, pub T);
 
 #[derive(Clone)]
 pub struct Router<T:Clone> {
-    receivers: Rc<RefCell<HashMap<Uuid, Rc<Receiver<T>>>>>
+    pub receivers: Rc<RefCell<HashMap<Uuid, Rc<Receiver<T>>>>>
 }
 
 

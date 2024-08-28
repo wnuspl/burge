@@ -69,6 +69,7 @@ pub fn box_collider(pos: [f32;2], shape: [f32;2]) -> PhysObj {
 pub struct POSettings {
 	pub solid: bool,
 	pub gravity_strength: f32,
+    pub terminal_velocity: f32,
 	pub on_collision: fn(&PhysObj, &PhysObj) -> Vec<PhysEvent>,
 	pub on_each: fn(&PhysObj, &PhysObj) -> Vec<PhysEvent>
 	//...
@@ -79,6 +80,7 @@ impl std::default::Default for POSettings {
         Self {
             solid: true,
             gravity_strength: 1.0,
+            terminal_velocity: -10.0,
             on_collision: |_,_| { Vec::new() },
             on_each: |_,_| { Vec::new() }
         }
@@ -95,7 +97,8 @@ pub enum PhysEvent {
 
     Collision(Uuid, PhysObj),
 
-    PosDeltaRequest([f32;2])
+    PosDeltaRequest([f32;2]),
+    VelocityDeltaRequest([f32;2])
 }
 
 
@@ -147,9 +150,15 @@ impl POMComponent {
     pub fn new_sender(&self) -> Sender<PhysEvent> {
         self.priv_sender.clone()
     }
+    pub fn new_receiver_uuid(&self, uuid: Uuid) -> (Uuid, Rc<Receiver<PhysEvent>>) {
+        self.router.new_receiver_uuid(uuid)
+    }
 }
 
 impl Component for PhysObjManager {
+    fn name(&self) -> &'static str {
+        "pom"
+    }
     fn to_any(&self) -> &dyn std::any::Any {
         &self.component
     }
@@ -163,9 +172,13 @@ impl Component for PhysObjManager {
 
 
 impl ElementBase for PhysObjManager {
+    fn init(&mut self, uuid: uuid::Uuid, components: &crate::component::ComponentManager) {
+    }
     fn local_update(&mut self, td: f32) {
+        
         let mut dynamics = Vec::new();
         for e in self.receiver.poll() {
+            
             match e {
                 PhysEvent::DynamicPO(uuid, po) => {
                     dynamics.push((uuid,po));
@@ -178,20 +191,14 @@ impl ElementBase for PhysObjManager {
         }
 
         for (uuid, d) in dynamics {
+            self.send_queue.append(&mut
+                self.individual((&uuid, &d), td)
+            );
             for (s_uuid, s) in &self.statics {
-                for e in (d.settings.on_each)(&d,s) {
-                    self.send_queue.push(RoutedEvent(Some(uuid), e))
-                }
-                if d.intersects(s) {
-                    for e in (d.settings.on_collision)(&d,s) {
-                        self.send_queue.push(RoutedEvent(Some(uuid), e))
-                    }
-
-                    if d.settings.solid && s.settings.solid {
-                        self.send_queue.push(RoutedEvent(Some(uuid), PhysEvent::PosDeltaRequest(d.exclusive_delta(s))));
-                    }
-                    self.send_queue.push(RoutedEvent(Some(uuid), PhysEvent::Collision(*s_uuid, *s)));
-                }
+                self.send_queue.append(&mut
+                    self.interaction((&uuid, &d), (s_uuid, s), td)
+                );
+                
             }
         }
     }
@@ -201,3 +208,60 @@ impl ElementBase for PhysObjManager {
         }
     }
 }
+
+
+
+
+impl PhysObjManager {
+    fn individual(&self, this: (&Uuid, &PhysObj), td: f32) -> Vec<RoutedEvent<PhysEvent>> {
+        let mut queue = Vec::new();
+
+        let (uuid, this) = this;
+
+        if this.settings.gravity_strength != 0.0 && this.delta[1] > this.settings.terminal_velocity  {
+            queue.push(RoutedEvent(Some(*uuid), PhysEvent::VelocityDeltaRequest([0.0, GRAVITY*this.settings.gravity_strength*td])));
+        }
+
+
+
+        queue
+    }
+    fn interaction(&self, this: (&Uuid, &PhysObj), other: (&Uuid, &PhysObj), td: f32) -> Vec<RoutedEvent<PhysEvent>> {
+        let mut queue = Vec::new();
+
+        let (this_uuid, this) = this;
+        let (other_uuid, other) = other;
+
+
+        for e in (this.settings.on_each)(this,other) {
+            queue.push(RoutedEvent(Some(*this_uuid), e))
+        }
+        
+        if this.intersects(other) {
+            queue.push(RoutedEvent(Some(*this_uuid), PhysEvent::Collision(*other_uuid, *other)));
+            for e in (this.settings.on_collision)(this,other) {
+                queue.push(RoutedEvent(Some(*this_uuid), e))
+            }
+
+
+
+            if this.settings.solid && other.settings.solid {
+                let delta = this.exclusive_delta(other);
+
+                
+                queue.push(RoutedEvent(Some(*this_uuid), PhysEvent::PosDeltaRequest(delta)));
+            }
+
+            
+            
+        }
+
+        
+
+
+
+        queue
+    }
+}
+
+const GRAVITY: f32 = -0.05;

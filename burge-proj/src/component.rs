@@ -3,6 +3,7 @@ use element::Element;
 use std::rc::Rc;
 
 pub trait Component {
+    fn name(&self) -> &'static str { "" }
 	fn build_element(&self) -> Element {
         Element::Null
     }
@@ -13,6 +14,8 @@ pub trait Component {
 
 
 use std::collections::HashMap;
+
+#[derive(Default)]
 pub struct ComponentManager {
     components: HashMap<String, Box<dyn Component>>
 }
