@@ -3,6 +3,9 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use uuid::Uuid;
 
+use crate::component::Component;
+use crate::physics::PhysEvent;
+
 
 #[derive(Clone)]
 pub struct Receiver<T:Clone> {
@@ -28,9 +31,10 @@ impl<T:Clone> Receiver<T> {
 
 
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct Sender<T:Clone> {
-    receivers: Rc<RefCell<Vec<Rc<Receiver<T>>>>>
+    receivers: Rc<RefCell<Vec<Rc<Receiver<T>>>>>,
+
 }
 
 impl<T:Clone> Sender<T> {
@@ -51,6 +55,17 @@ impl<T:Clone> Sender<T> {
     }
 }
 
+impl<T:Clone + 'static> Component for Sender<T> {
+    fn load(&self, data: &serde_json::Map<String, serde_json::Value>) -> Box<dyn Component> {
+        Box::new(self.clone())
+    }
+    fn name(&self) -> &'static str {
+        "input"
+    }
+    fn to_any(&self) -> &dyn std::any::Any {
+        self
+    }
+}
 
 
 
@@ -93,3 +108,7 @@ impl<T:Clone> Router<T> {
         (uuid, r)
 	}
 }
+
+
+
+

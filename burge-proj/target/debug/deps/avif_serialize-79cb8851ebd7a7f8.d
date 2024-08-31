@@ -1,0 +1,10 @@
+C:\Users\nuspl\Documents\Projects\burge\v2\burge\burge-proj\target\debug\deps\libavif_serialize-79cb8851ebd7a7f8.rmeta: C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\lib.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\boxes.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\constants.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\writer.rs
+
+C:\Users\nuspl\Documents\Projects\burge\v2\burge\burge-proj\target\debug\deps\libavif_serialize-79cb8851ebd7a7f8.rlib: C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\lib.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\boxes.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\constants.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\writer.rs
+
+C:\Users\nuspl\Documents\Projects\burge\v2\burge\burge-proj\target\debug\deps\avif_serialize-79cb8851ebd7a7f8.d: C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\lib.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\boxes.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\constants.rs C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\writer.rs
+
+C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\lib.rs:
+C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\boxes.rs:
+C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\constants.rs:
+C:\Users\nuspl\.cargo\registry\src\index.crates.io-6f17d22bba15001f\avif-serialize-0.8.1\src\writer.rs:

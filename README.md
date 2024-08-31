@@ -41,7 +41,7 @@ struct Player;
 // All methods of ElementBase are optional, but many should be implemented often
 impl ElementBase for Player { 
     fn load(&self, data: Map<String, Value>) -> Element {
-        Element::Entity(Box::new(self.clone))
+        Element::Element(Box::new(self.clone))
     }
 }
 
@@ -55,7 +55,7 @@ fn main() {
     // The load method will be called on the default element corresponding to the 'name' field, and that new element will be added to the scene
     instance.scene_controller().set_json_manager({
         let mut jm = scene::JSONManager::new();
-        let default_player = Element::Entity(Box::new(Player::default()));
+        let default_player = Element::Element(Box::new(Player::default()));
         jm.elements.insert("player", default_player);
         jm
     });
@@ -98,13 +98,12 @@ impl ElementBase for Player {
 
         // Allow pos to be loaded from JSON
         if let Some(pos) = data.get("pos") {
-            // try_vec2 is a macro to clean up parsing JSON data as [f32;2], a commonly used conversion
+            // try_vec2! will return Option<[f32;2]> from serde_json::Value
             default.pos = try_vec2!(pos).unwrap();
 
         }
 
-        Element::Entity(Box::new(default))
+        Element::Element(Box::new(default))
     }
 }
-
 ```

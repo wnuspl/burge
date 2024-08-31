@@ -14,23 +14,39 @@ pub struct PhysObj {
 
 impl PhysObj {
     pub fn intersects(&self, other: &PhysObj) -> bool {
-        let this_left = self.pos[0];
-        let this_right = self.pos[0]+self.shape[0];
-        let this_bottom = self.pos[1];
-        let this_top = self.pos[1]+self.shape[1];
+        let self_x = self.pos[0] + self.delta[0];
+        let self_y = self.pos[1] + self.delta[1];
 
-        let other_left = other.pos[0];
-        let other_right = other.pos[0]+other.shape[0];
-        let other_bottom = other.pos[1];
-        let other_top = other.pos[1]+other.shape[1];
+        let other_x = other.pos[0] + other.delta[0];
+        let other_y = other.pos[1] + other.delta[1];
+
+        
+
+        let this_left = self_x;
+        let this_right = self_x+self.shape[0];
+        let this_bottom = self_y;
+        let this_top = self_y+self.shape[1];
+
+        let other_left = other_x;
+        let other_right = other_x+other.shape[0];
+        let other_bottom = other_y;
+        let other_top = other_y+other.shape[1];
 
         !(this_left > other_right || this_right < other_left || this_bottom > other_top || this_top < other_bottom)
     }
     pub fn exclusive_delta(&self, other: &Self) -> [f32;2] {
-        let left = other.pos[0] - (self.pos[0]+self.shape[0]);
-        let right = (other.pos[0] + other.shape[0]) - self.pos[0];
-        let down = other.pos[1] - (self.pos[1]+self.shape[1]);
-        let up = (other.pos[1] + other.shape[1]) - self.pos[1];
+        let self_x = self.pos[0] + self.delta[0];
+        let self_y = self.pos[1] + self.delta[1];
+
+        let other_x = other.pos[0] + other.delta[0];
+        let other_y = other.pos[1] + other.delta[1];
+
+
+
+        let left = other_x - (self_x+self.shape[0]);
+        let right = (other_x + other.shape[0]) - self_x;
+        let down = other_y - (self_y+self.shape[1]);
+        let up = (other_y + other.shape[1]) - self_y;
 
         let horizontal = if left.abs() > right.abs() {
             right
@@ -44,7 +60,7 @@ impl PhysObj {
             down
         };
 
-        if horizontal > vertical {
+        if horizontal < vertical {
             [horizontal, 0.0]
         } else {
             [0.0, vertical]
@@ -87,18 +103,21 @@ impl std::default::Default for POSettings {
     }
 }
 
-#[derive(Clone,Copy)]
+#[derive(Clone,Copy, Default)]
 pub enum PhysEvent {
     StaticPO(Uuid, PhysObj),
     DynamicPO(Uuid, PhysObj),
 
     RemoveStaticPO(Uuid),
 
+    ModPos([f32;2]),
+    ModVelocity([f32;2]),
+
 
     Collision(Uuid, PhysObj),
 
-    PosDeltaRequest([f32;2]),
-    VelocityDeltaRequest([f32;2])
+    #[default]
+    Null
 }
 
 
@@ -163,7 +182,7 @@ impl Component for PhysObjManager {
         &self.component
     }
     fn build_element(&self) -> Element {
-        Element::Element(Box::new(self.clone()))
+        Element::Generic(Box::new(self.clone()))
     }
     fn load(&self, data: &serde_json::Map<String, serde_json::Value>) -> Box<dyn Component> {
         Box::new(self.clone())
@@ -218,8 +237,9 @@ impl PhysObjManager {
 
         let (uuid, this) = this;
 
+
         if this.settings.gravity_strength != 0.0 && this.delta[1] > this.settings.terminal_velocity  {
-            queue.push(RoutedEvent(Some(*uuid), PhysEvent::VelocityDeltaRequest([0.0, GRAVITY*this.settings.gravity_strength*td])));
+            queue.push(RoutedEvent(Some(*uuid), PhysEvent::ModVelocity([0.0, GRAVITY*this.settings.gravity_strength*td])));
         }
 
 
@@ -236,24 +256,18 @@ impl PhysObjManager {
         for e in (this.settings.on_each)(this,other) {
             queue.push(RoutedEvent(Some(*this_uuid), e))
         }
-        
+
+
         if this.intersects(other) {
             queue.push(RoutedEvent(Some(*this_uuid), PhysEvent::Collision(*other_uuid, *other)));
+
+
             for e in (this.settings.on_collision)(this,other) {
-                queue.push(RoutedEvent(Some(*this_uuid), e))
-            }
-
-
+                queue.push(RoutedEvent(Some(*this_uuid), e));
+            }     
 
             if this.settings.solid && other.settings.solid {
-                let delta = this.exclusive_delta(other);
-
-                
-                queue.push(RoutedEvent(Some(*this_uuid), PhysEvent::PosDeltaRequest(delta)));
             }
-
-            
-            
         }
 
         
@@ -264,4 +278,4 @@ impl PhysObjManager {
     }
 }
 
-const GRAVITY: f32 = -0.05;
+const GRAVITY: f32 = -0.005;

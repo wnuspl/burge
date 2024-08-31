@@ -1,13 +1,21 @@
 use std::collections::HashMap;
 use std::hash::Hash;
+use std::os::windows;
 
+use glium::Texture2d;
 use uuid::Uuid;
 
+use crate::sprite::SpriteSheet;
 use crate::{component::ComponentManager, element::Element};
+
+pub enum SceneEvent {
+    SetCamera(Uuid),
+
+}
 
 #[derive(Default)]
 pub struct Scene {
-    camera_uuid: Option<Uuid>,
+    camera_uuid: Uuid,
     pub elements: HashMap<Uuid, Element>,
     pub component_manager: ComponentManager
 }
@@ -15,6 +23,9 @@ pub struct Scene {
 impl Scene {
     pub fn init_elements(&mut self) {
         for (uuid, element) in &mut self.elements {
+            if matches!(element, Element::Camera(..)) {
+                self.camera_uuid = *uuid;
+            }
             element.init(*uuid, &self.component_manager);
         }
     }
@@ -33,6 +44,27 @@ impl Scene {
     pub fn add_element(&mut self, element: Element) {
         let uuid = Uuid::new_v4();
         self.elements.insert(uuid, element);
+    }
+
+
+    pub fn display(&self, sprite_sheet: &SpriteSheet) -> Vec<crate::Vertex> {
+        let mut vertices = Vec::new();
+        for (_, element) in &self.elements {
+            match element {
+                Element::Entity(entity) => vertices.append(&mut &mut sprite_sheet.vertices(entity.sprite())),
+                _ => ()
+            }
+        }
+        vertices
+    }
+
+
+    pub fn camera_projection(&self, window_size: [u32;2]) -> ([[f32;3];3], [f32;2]) {
+        if let Some(Element::Camera(camera)) = self.elements.get(&self.camera_uuid) {
+            (camera.clip_matrix(window_size), camera.offset())
+        } else {
+            ([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0f32]], [0.0,0.0])
+        }
     }
 }
 
@@ -56,7 +88,7 @@ impl JSONManager {
                     if let Some(Value::String(name)) = fields.get("name") {
                         if let Some(default) = self.$hashmap.get(name) {
                             Some(default.load(&fields))
-                        } else { None }
+                        } else { println!("Obj with name: '{}' not found in JSON Manager", name); None }
                     } else { None }
                 } else { None }
             };
@@ -115,19 +147,30 @@ pub struct SceneManager {
     pub scenes: HashMap<String, Scene>,
     pub json_manager: JSONManager,
     default_components: Vec<serde_json::Value>,
-    default_elements: Vec<serde_json::Value>
+    default_elements: Vec<serde_json::Value>,
+    current_scene_name: &'static str
 }
 
 impl SceneManager {
     pub fn new() -> Self {
 
-        let mut dc = vec![serde_json::from_str(r#"{"name":"pom"}"#).unwrap()];
+        let dc = vec![serde_json::from_str(r#"{"name":"pom"}"#).unwrap(),  serde_json::from_str(r#"{"name":"input"}"#).unwrap()];
+        let de = vec![serde_json::from_str(r#"{"name":"default_camera", "scale":"12"}"#).unwrap()];
         Self {
             scenes: HashMap::new(),
             json_manager: JSONManager::default(),
             default_components: dc,
-            default_elements: Vec::new()
+            default_elements: de,
+            current_scene_name: ""
         }
+    }
+    pub fn set_scene(&mut self, name: &'static str) -> &mut Scene {
+        self.current_scene_name = name;
+        self.current_scene()
+
+    }
+    pub fn current_scene(&mut self) -> &mut Scene {
+        self.scenes.get_mut(self.current_scene_name).unwrap()
     }
     pub fn add_scene(&mut self, data: serde_json::Value) {
         let mut scene_name = "".to_string();
